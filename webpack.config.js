@@ -44,7 +44,7 @@ config = {
     ],
   },
   resolve: {
-    root: path.resolve('./app'),
+    root: path.resolve('./src'),
     extensions: [ '', '.js', '.jsx' ],
   },
   plugins: plugins,

@@ -1,4 +1,4 @@
-import { curry, filter, indexOf, reduce, repeat, update } from 'ramda'
+import { filter, indexOf, reduce, repeat } from 'ramda'
 
 const winPatterns = [
   [ 0, 1, 2 ],
@@ -15,14 +15,19 @@ const getPlayer = (move, history) => {
   return (indexOf(move, history) % 2 === 0) ? 'x' : 'o'
 }
 
-const makeMove = (history, memo, move) => {
-  const player = getPlayer(move, history)
+const move = (history) => {
+  return (memo, move) => {
+    const player = getPlayer(move, history)
 
-  return update(move, player, memo)
+    return [
+      ...memo.slice(0, move),
+      player,
+      ...memo.slice(move + 1),
+    ]
+  }
 }
 
 const getBoard = (history) => {
-  const move = curry(makeMove)
   const memo = repeat(false, 9)
 
   return reduce(move(history), memo, history)

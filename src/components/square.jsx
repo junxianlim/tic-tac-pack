@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 
 const Square = ({ square, mark, win }, { store }) => {
+
   const handleClick = () => {
     store.dispatch({
       type: 'MOVE',
@@ -8,10 +9,8 @@ const Square = ({ square, mark, win }, { store }) => {
     })
   }
 
-  const status = win ? `${mark} win` : mark
-
   return mark ?
-    <div className={status}>{mark}</div> :
+    <div className={win ? `${mark} win` : mark}>{mark}</div> :
     <div onClick={handleClick}/>
 }
 

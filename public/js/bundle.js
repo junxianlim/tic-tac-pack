@@ -20347,15 +20347,9 @@
 	  value: true
 	});
 	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	function _objectDestructuringEmpty(obj) { if (obj == null) throw new TypeError('Cannot destructure undefined'); }
 	
 	var _react = __webpack_require__(1);
 	
@@ -20373,72 +20367,58 @@
 	
 	var mapIndexed = (0, _ramda.addIndex)(_ramda.map);
 	
-	var Game = (function (_Component) {
-	  _inherits(Game, _Component);
+	var Game = function Game(_ref, _ref2) {
+	  _objectDestructuringEmpty(_ref);
 	
-	  function Game() {
-	    _classCallCheck(this, Game);
+	  var store = _ref2.store;
 	
-	    _get(Object.getPrototypeOf(Game.prototype), 'constructor', this).apply(this, arguments);
-	  }
+	  var game = store.getState()[0];
+	  var board = (0, _utilsBoardJs.getBoard)(game);
+	  var wins = (0, _ramda.flatten)((0, _utilsBoardJs.checkForWin)(board));
 	
-	  _createClass(Game, [{
-	    key: 'render',
-	    value: function render() {
-	      var store = this.context.store;
+	  var renderBoard = function renderBoard(board, wins) {
+	    return mapIndexed(function (player, idx) {
+	      var props = { key: idx, square: idx };
 	
-	      var board = (0, _utilsBoardJs.getBoard)(this.props.history);
-	      var wins = (0, _ramda.flatten)((0, _utilsBoardJs.checkForWin)(board));
-	      var status = (0, _ramda.isEmpty)(wins) ? 'board' : 'board won';
+	      if ((0, _ramda.contains)(idx, wins)) {
+	        props.win = true;
+	      }
+	      if (player) {
+	        props.mark = player;
+	      }
 	
-	      return _react2['default'].createElement(
-	        'div',
-	        { style: { textAlign: 'center' } },
-	        _react2['default'].createElement(
-	          'div',
-	          { className: status },
-	          this.renderBoard(board, wins)
-	        ),
-	        _react2['default'].createElement(
-	          'button',
-	          {
-	            className: 'button',
-	            onClick: function () {
-	              return store.dispatch({ type: 'NEW_GAME' });
-	            } },
-	          'New Game'
-	        ),
-	        _react2['default'].createElement(
-	          'button',
-	          {
-	            className: 'button',
-	            onClick: function () {
-	              return store.dispatch({ type: 'UNDO_MOVE' });
-	            } },
-	          'Undo Move'
-	        )
-	      );
-	    }
-	  }, {
-	    key: 'renderBoard',
-	    value: function renderBoard(board, wins) {
-	      return mapIndexed(function (player, idx) {
-	        var props = { key: idx, square: idx };
+	      return _react2['default'].createElement(_square2['default'], props);
+	    }, board);
+	  };
 	
-	        if ((0, _ramda.contains)(idx, wins)) {
-	          props.win = true;
-	        }
-	        if (player) {
-	          props.mark = player;
-	        }
-	
-	        return _react2['default'].createElement(_square2['default'], props);
-	      }, board);
-	    }
-	  }]);
-	
-	  return Game;
-	})(_react.Component);
+	  return _react2['default'].createElement(
+	    'div',
+	    { style: { textAlign: 'center' } },
+	    _react2['default'].createElement(
+	      'div',
+	      { className: (0, _ramda.isEmpty)(wins) ? 'board' : 'board won' },
+	      renderBoard(board, wins)
+	    ),
+	    _react2['default'].createElement(
+	      'button',
+	      {
+	        className: 'button',
+	        onClick: function () {
+	          return store.dispatch({ type: 'NEW_GAME' });
+	        } },
+	      'New Game'
+	    ),
+	    _react2['default'].createElement(
+	      'button',
+	      {
+	        className: 'button',
+	        onClick: function () {
+	          return store.dispatch({ type: 'UNDO_MOVE' });
+	        } },
+	      'Undo Move'
+	    )
+	  );
+	};
 	
 	Game.contextTypes = {
 	  store: _react.PropTypes.object
@@ -28532,7 +28512,7 @@
 	
 	
 	// module
-	exports.push([module.id, "button {\n  background-color: #5fbe9b;\n  border: 1px solid rgba(0, 0, 0, 0);\n  border-color: #5fbe9b;\n  border-radius: 4px;\n  color: #ffffff;\n  cursor: pointer;\n  display: inline-block;\n  font-size: 14px;\n  font-weight: 400;\n  line-height: 1.4;\n  margin: 5px;\n  padding: 6px 12px;\n  text-align: center;\n  vertical-align: middle;\n  white-space: nowrap;\n}\n\nbutton:hover {\n  background-color: #c9302c;\n  border-color: #ac2925;\n}\n", ""]);
+	exports.push([module.id, "button {\n  background-color: #d9534f;\n  border: 1px solid rgba(0, 0, 0, 0);\n  border-color: #d9534f;\n  border-radius: 4px;\n  color: #ffffff;\n  cursor: pointer;\n  display: inline-block;\n  font-size: 14px;\n  font-weight: 400;\n  line-height: 1.4;\n  margin: 5px;\n  padding: 6px 12px;\n  text-align: center;\n  vertical-align: middle;\n  white-space: nowrap;\n}\n\nbutton:hover {\n  background-color: #c9302c;\n  border-color: #ac2925;\n}\n", ""]);
 	
 	// exports
 

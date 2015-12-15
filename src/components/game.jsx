@@ -32,9 +32,9 @@ const winPatterns = [
 ]
 
 const buttonStyle = {
-  backgroundColor: '#5fbe9b',
+  backgroundColor: '#d9534f',
   border: '1px solid rgba(0, 0, 0, 0)',
-  borderColor: '#5fbe9b',
+  borderColor: '#d9534f',
   borderRadius: '4px',
   color: '#ffffff',
   cursor: 'pointer',

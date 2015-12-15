@@ -37,6 +37,10 @@ config = {
         loader: 'eslint-loader',
         exclude: /node_modules/,
       },
+      {
+        test: /\.css$/,
+        loader: 'style!css',
+      },
     ],
   },
   resolve: {

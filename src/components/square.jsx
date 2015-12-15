@@ -1,35 +1,32 @@
-import React, { Component, PropTypes } from 'react'
+import React, { PropTypes } from 'react'
 
-import shouldPureComponentUpdate from 'react-pure-render/function'
-
-class Square extends Component {
-
-  static propTypes: {
-    store: PropTypes.object.isRequired,
-    square: PropTypes.number.isRequired,
-    mark: PropTypes.string,
-    win: PropTypes.bool
-  }
-
-  static defaultProps : { win: false }
-
-  shouldComponentUpdate : shouldPureComponentUpdate
-
-  handleClick () {
-    this.props.store.dispatch({
+const Square = ({ square, mark, win }, { store }) => {
+  const handleClick = () => {
+    store.dispatch({
       type: 'MOVE',
-      square: this.props.square,
+      square: square,
     })
   }
 
-  render () {
-    const { win, mark } = this.props
-    const status = win ? `${mark} win` : mark
+  const status = win ? `${mark} win` : mark
 
-    return mark ?
-      <div className={status}>{mark}</div> :
-      <div onClick={this.handleClick.bind(this)}/>
-  }
+  return mark ?
+    <div className={status}>{mark}</div> :
+    <div onClick={handleClick}/>
+}
+
+Square.propTypes = {
+  square: PropTypes.number.isRequired,
+  mark: PropTypes.string,
+  win: PropTypes.bool,
+}
+
+Square.defaultProps = {
+  win: false,
+}
+
+Square.contextTypes = {
+  store: PropTypes.object,
 }
 
 export default Square

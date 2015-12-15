@@ -33,6 +33,7 @@
     "babel-preset-stage-0": "^6.3.13",
     "chai": "3.3.0",
     "core-js": "1.1.4",
+    "css-loader": "^0.23.0",
     "eslint": "1.4.3",
     "eslint-config-rackt": "^1.1.1",
     "eslint-loader": "1.0.0",
@@ -56,6 +57,7 @@
     "react-addons-test-utils": "^0.14.3",
     "react-dom": "^0.14.3",
     "react-pure-render": "^1.0.2",
+    "style-loader": "^0.13.0",
     "watch": "0.16.0",
     "webpack": "1.12.2",
     "webpack-dev-server": "1.11.0"

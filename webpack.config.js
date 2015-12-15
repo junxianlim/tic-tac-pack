@@ -37,10 +37,14 @@ config = {
         loader: 'eslint-loader',
         exclude: /node_modules/,
       },
+      {
+        test: /\.css$/,
+        loader: 'style!css',
+      },
     ],
   },
   resolve: {
-    root: path.resolve('./app'),
+    root: path.resolve('./src'),
     extensions: [ '', '.js', '.jsx' ],
   },
   plugins: plugins,

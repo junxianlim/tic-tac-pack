@@ -1,129 +1,46 @@
-import React, { Component, PropTypes } from 'react'
-
-import {
-  addIndex,
-  contains,
-  curry,
-  filter,
-  flatten,
-  indexOf,
-  isEmpty,
-  map,
-  reduce,
-  repeat,
-  update,
-} from 'ramda'
+import React, { PropTypes } from 'react'
+import { addIndex, flatten, contains, isEmpty, map } from 'ramda'
+import { getBoard, checkForWin } from '../utils/board.js'
 
 import Square from './square'
 
-import shouldPureComponentUpdate from 'react-pure-render/function'
+import './game.css'
 
 const mapIndexed = addIndex(map)
 
-const winPatterns = [
-  [ 0, 1, 2 ],
-  [ 3, 4, 5 ],
-  [ 6, 7, 8 ],
-  [ 0, 3, 6 ],
-  [ 1, 4, 7 ],
-  [ 2, 5, 8 ],
-  [ 0, 4, 8 ],
-  [ 2, 4, 6 ],
-]
+const Game = ({}, { store }) => {
+  const history = store.getState()[0]
+  const board = getBoard(history)
+  const wins = flatten(checkForWin(board))
 
-const buttonStyle = {
-  backgroundColor: '#d9534f',
-  border: '1px solid rgba(0, 0, 0, 0)',
-  borderColor: '#d9534f',
-  borderRadius: '4px',
-  color: '#ffffff',
-  cursor: 'pointer',
-  display: 'inline-block',
-  fontSize: '14px',
-  fontWeight: 400,
-  lineHeight: 1.4,
-  margin: '5px',
-  padding: '6px 12px',
-  textAlign: 'center',
-  verticalAlign: 'middle',
-  whiteSpace: 'nowrap',
-}
-
-class Game extends Component {
-
-  static propTypes: {
-    store: PropTypes.object.isRequired,
-    history: PropTypes.array.isRequired
-  }
-
-  shouldComponentUpdate : shouldPureComponentUpdate
-
-  getPlayer (move, history) {
-    return (indexOf(move, history) % 2 === 0) ? 'x' : 'o'
-  }
-
-  makeMove (history, memo, move) {
-    const player = this.getPlayer(move, history)
-
-    return update(move, player, memo)
-  }
-
-  getBoard (history) {
-    const move = curry(this.makeMove.bind(this))
-    const memo = repeat(false, 9)
-
-    return reduce(move(history), memo, history)
-  }
-
-  checkForWin (board) {
-    return filter((pattern) => {
-      const s1 = board[pattern[0]]
-      const s2 = board[pattern[1]]
-      const s3 = board[pattern[2]]
-
-      return s1 && s1 === s2 && s2 === s3
-    }, winPatterns)
-  }
-
-  render () {
-    const { store } = this.props
-    const board = this.getBoard(this.props.history)
-    const wins = flatten(this.checkForWin(board))
-    const status = isEmpty(wins) ? 'board' : 'board won'
-
-    return (<div style={{ textAlign: 'center' }}>
-      <div className={status}>
-        {this.renderBoard(board, wins)}
-      </div>
-      <button
-        style={buttonStyle}
-        onClick={() => store.dispatch({ type: 'NEW_GAME' })}>
-        New Game
-      </button>
-      <button
-        style={buttonStyle}
-        onClick={() => store.dispatch({ type: 'UNDO_MOVE' })}>
-        Undo Move
-      </button>
-    </div>)
-  }
-
-  renderBoard (board, wins) {
-    const { store } = this.props
-
+  const renderBoard = (board, wins) => {
     return mapIndexed((player, idx) => {
-      const props = { key: idx, square: idx, store: store }
+      const props = { key: idx, square: idx }
 
-      if (contains(idx, wins)) {
-        props.win = true
-      }
-      if (player) {
-        props.mark = player
-      }
+      if (contains(idx, wins)) { props.win = true    }
+      if (player)              { props.mark = player }
 
       return <Square {...props} />
     }, board)
   }
+
+  return <div style={{ textAlign: 'center' }}>
+    <div className={isEmpty(wins) ? 'board' : 'board won'}>
+      {renderBoard(board, wins)}
+    </div>
+    <button
+      onClick={() => store.dispatch({ type: 'NEW_GAME' })}>
+      New Game
+    </button>
+    <button
+      onClick={() => store.dispatch({ type: 'UNDO_MOVE' })}>
+      Undo Move
+    </button>
+  </div>
+}
+
+Game.contextTypes = {
+  store: PropTypes.object,
 }
 
 export default Game

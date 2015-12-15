@@ -1,8 +1,8 @@
-import Square from '../src/components/square'
 import Game from '../src/components/game'
 import store from '../src/store'
 
 import React from 'react'
+import { Provider } from 'react-redux'
 import TestUtils from 'react-addons-test-utils'
 
 import { forEach } from 'ramda'
@@ -13,7 +13,6 @@ const {
     renderIntoDocument,
     isCompositeComponent,
     scryRenderedDOMComponentsWithClass,
-    scryRenderedDOMComponentsWithTag,
     Simulate,
   } = TestUtils
 
@@ -26,7 +25,10 @@ describe('Game', () => {
 
     render = () => {
       game =
-        renderIntoDocument(<Game history={store.getState()[0]} store={store} onRender={ spy }/>)
+        renderIntoDocument(
+          <Provider store={store}>
+            <Game onRender={ spy }/>
+          </Provider>)
     }
 
     store.subscribe(render)
@@ -44,7 +46,7 @@ describe('Game', () => {
     })
 
     it('begins with an empty history', () => {
-      expect(game.props.history).to.eql([])
+      expect(store.getState()[0]).to.eql([])
     })
   })
 
@@ -68,7 +70,7 @@ describe('Game', () => {
       Simulate.click(midLeft)
       Simulate.click(topLeft)
 
-      expect(game.props.history).to.eql([ 4, 3, 0 ])
+      expect(store.getState()[0]).to.eql([ 4, 3, 0 ])
     })
 
     it('prevents rewriting squares', () => {
@@ -125,33 +127,4 @@ describe('Game', () => {
   })
 })
 
-describe('Square', () => {
-  let square
-  const mark = 'x'
-
-  describe('when empty', () => {
-    before(() => {
-      square = renderIntoDocument(<Square store={store} square={1} />)
-    })
-
-    it('is a composite component', () => {
-      expect(isCompositeComponent(square)).to.equal(true)
-    })
-  })
-
-  describe('after play', () => {
-    before(() => {
-      square = renderIntoDocument(<Square store={store} square={1} mark={mark}/>)
-    })
-
-    it('has the correct content', () => {
-      const div = scryRenderedDOMComponentsWithTag(square, 'div')[0]
-
-      expect(div && div.innerHTML).to.equal(mark)
-    })
-
-    it('applies the players style', () => {
-      expect(scryRenderedDOMComponentsWithClass(square, 'x')).not.to.be.empty
-    })
-  })
-})
+// TODO: Add Square tests

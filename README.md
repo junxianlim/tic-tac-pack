@@ -1,2 +1,4 @@
-# tic-tac-pack
-Webpack/react/redux version of tic-tac-toe
+# Tic-Tac-Pack
+
+A webpack/react/redux version of tic-tac-toe.
+
